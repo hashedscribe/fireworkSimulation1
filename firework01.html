@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+
+  <style>
+    a:link{
+      color: #8b7864;
+    }
+    a:visited{
+      color: #8b7864;
+    }
+    a:hover{
+      color: #ce9b65;
+    }
+  </style>
+
+  <script>
+
+  function fireworks(){
+    let weather = ["rain", "cloudy", "clear", "snow", "hurricane", "tornado", "earthquake", "hail"];
+    let wcondition = weather[Math.floor(Math.random() * weather.length)];
+    let fireworks = ["Fire Work's High Quality Kaboom Stick",
+            "Tim's Premium Firework",
+            "Back-Alley Sparkler",
+            "Firecracker by Mit",
+            "Homemade Explosive v.420",
+            "Homemade Explosive v.421",
+            "Flameworks's First-Rate Kapow Rod",
+            "Boom Boom Small Tree Part"];
+
+    let quality = [3, 8, 4, 8, 10, 1, 3, 6];
+
+    class Firework{
+      constructor(name, quality, light, colour, size, x, y){
+        this.name = name;
+        this.quality = parseInt(quality);
+        this.light = light;
+        this.colour = colour;
+        this.sat = 0;
+        this.size = size;
+        this.x = x;
+        this.y = y;
+        this.z = 0;
+
+        this.chance = 0;
+        this.warning = "";
+      }
+
+      fire(){
+        this.chance = Math.floor(Math.random()*20) * this.quality;
+        if(wcondition === "rain" || wcondition === "snow" || wcondition === "hail"){
+          this.chance = this.chance - Math.floor(Math.random()*10);
+          console.log("Unfortunately it is " + wcondition + "ing. This might screw some stuff up.")
+        }else if(wcondition === "hurricane" || wcondition === "tornado" || wcondition === "earthquake"){
+          this.chance = this.chance - Math.floor(Math.random()*15);
+          console.log("WEATHER WARNING: Incoming " + wcondition + ".");
+          this.warning = prompt("Do you wish to continue shooting fireworks and risk unintentional homicide? (Y/N)");
+          if(this.warning == 'N'){
+            console.log("Emergency kill switch is not currently operational. Just hope for the weather to fix your problems.");
+          }else{
+            console.log("On with the show then.");
+          }
+        }else{
+          console.log("Weather looks good. For now.");
+        }
+
+        console.log(this.name + " has " + this.chance + "% chance of lighting.");
+
+        if(this.chance*(Math.floor(Math.random()*10)) > 50){
+          console.log(this.name + " has been lit.");
+          this.fly();
+        }else{
+          console.log(this.name + " has failed to light.");
+          this.sat = this.sat/parseInt("1." + this.quality);
+          console.log("Final satisfaction rating: " + this.sat + ".")
+        }
+      }
+
+      fly(){
+        for(let i = 0; i < Math.floor(Math.random()*150)+60; i++){
+          this.z++;
+          this.sat = this.sat + 0.5;
+        }
+        console.log(this.name + " flies " + this.z + " meters high.");
+        this.explode();
+      }
+
+      explode(){
+        if(this.chance < 60){
+          console.log(this.name + " has a chance of not exploding.");
+        }else{
+          console.log(this.name + " will most definitely explode :D");
+        }
+
+        let maybe = Math.floor(Math.random()*3);
+
+        if(this.chance >= 60 || maybe != 0){
+          console.log(this.name + " has exploded.");
+          this.sat = this.sat + 2;
+          this.fade();
+        }else{
+          console.log(this.name + " somehow didn't explode.")
+        }
+      }
+
+      fade(){
+        // while(this.light != 0){
+        //   this.light=--;
+        // }
+
+        if(this.z < this.size){
+          this.sat++;
+        }else{
+          this.sat = this.sat - 5;
+        }
+
+
+        if(this.quality < 5){
+          this.sat = this.sat * 2.5-(this.chance*0.1);
+        }
+
+        console.log(this.name + " has faded.");
+        console.log("Final satisfaction rating: " + this.sat + ".")
+      }
+    }
+
+    for(let i = 1; i <= fireworks.length; i++){
+      console.log(i+ ". " + fireworks[i-1]);
+    }
+
+    var choice = parseInt(prompt("Please select a firework (1 - " + fireworks.length + ")."))-1;
+
+    while(parseInt(choice) > -1){
+      if(choice < -1 || choice > fireworks.length-1 || Number.isInteger(choice) == false){ //number is int wont work tho
+        console.log("THIS FIREWORK DOES NOT EXIST");
+        choice = parseInt(prompt("Please select a firework (1 - " + fireworks.length + ")."))-1;
+      }else{
+        var theFirework = new Firework(fireworks[choice], quality[choice], 100, "colour", 80, 0, 0);
+        wcondition = weather[Math.floor(Math.random() * weather.length)];
+        theFirework.fire();
+        choice = parseInt(prompt("Please select a firework (1 - " + fireworks.length + ")."))-1;
+        console.log("\n" + "-------------" + "\n" + "\n");
+      }
+    }
+
+    console.log("Show's over :(");
+  }
+
+  </script>
+
+</head>
+<body onload = "fireworks();" style="background-color:#1b1a18;">
+
+</body>
+</html>
